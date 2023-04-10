@@ -32,6 +32,8 @@ module.exports = {
     'import/order': 'error',
     // Default from turborepo
     '@next/next/no-html-link-for-pages': 'off',
+    // React hook dependencies
+    'react-hooks/exhaustive-deps': 'error',
   },
   // This causes problem with linting in VSCode.
   // We may need to use this in the future.
