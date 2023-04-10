@@ -29,7 +29,7 @@ export const usePdfCanvas: UsePdfCanvas = ({
   onLoad = noop,
   onError = noop,
 }) => {
-  // / prevent useCallback recreation
+  // prevent useCallback recreation
   const callbackRef = React.useRef({ onLoad, onError });
   const ref = React.useRef<HTMLDivElement | null>(null);
   const setRef = React.useCallback(
@@ -100,7 +100,7 @@ export const usePdfCanvas: UsePdfCanvas = ({
       // save node reference
       ref.current = node;
     },
-    [url, pageNum]
+    [url, workerSrc, pageNum]
   );
 
   return [setRef];
