@@ -31,11 +31,6 @@ export const usePdfCanvas: UsePdfCanvas = ({
 }) => {
   // / prevent useCallback recreation
   const callbackRef = React.useRef({ onLoad, onError });
-  React.useEffect(() => {
-    // eslint-disable-next-line functional/immutable-data
-    GlobalWorkerOptions.workerSrc = workerSrc;
-  }, [workerSrc]);
-
   const ref = React.useRef<HTMLDivElement | null>(null);
   const setRef = React.useCallback(
     async (node: HTMLDivElement) => {
@@ -46,6 +41,9 @@ export const usePdfCanvas: UsePdfCanvas = ({
 
       if (node) {
         if (!url) return;
+
+        // eslint-disable-next-line functional/immutable-data
+        GlobalWorkerOptions.workerSrc = workerSrc;
 
         const canvasWrapper = node;
 
