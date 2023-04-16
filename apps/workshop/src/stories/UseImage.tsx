@@ -5,7 +5,7 @@ export const UseImage: React.FC = () => {
   const { data, status, load } = useImage();
 
   React.useEffect(() => {
-    load('/file_example_JPG_100kB.jpg');
+    load('/200x200.jpg');
   }, [load]);
 
   return (
