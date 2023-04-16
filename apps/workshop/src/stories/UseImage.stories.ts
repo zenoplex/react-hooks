@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { userEvent, waitFor, within } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
 
 import { UseImage } from './UseImage';
 
@@ -12,4 +14,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByText('load'));
+
+    waitFor(() => {
+      expect(canvas.getByAltText('image'));
+    });
+  },
+};
+
+export const Error: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.clear(canvas.getByLabelText('url'));
+    await userEvent.click(canvas.getByText('load'));
+
+    waitFor(() => {
+      expect(canvas.getByTestId('result').textContent).toBe('error');
+    });
+  },
+};
