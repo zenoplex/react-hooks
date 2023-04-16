@@ -8,11 +8,11 @@ export class UnexpectedError extends Error {
   }
 }
 
-export class FileReadError extends Error {
+export class ImageLoadError extends Error {
   readonly cause?: Error;
   constructor(message: string, cause?: Error) {
     super(message);
-    this.name = 'FileReadError';
+    this.name = 'ImageLoadError';
     this.cause = cause;
     this.message = message;
   }
