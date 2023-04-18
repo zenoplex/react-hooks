@@ -1,0 +1,25 @@
+name: 'Storybook Tests'
+on: push
+jobs:
+  test:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+      - name: Build Storybook
+        run: npm run build-storybook --quiet -w workshop
+      - name: Serve Storybook
+        run: npx serve -l 6006 ./apps/workshop/storybook-static &
+      - name: Wait for serve
+        run: wget --tries 600 --waitretry 1 --retry-connrefused --timeout 300 -O /dev/null http://localhost:6006
+      - name: Run tests
+        run: npm run test:storybook -w workshop
