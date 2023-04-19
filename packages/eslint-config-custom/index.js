@@ -17,6 +17,8 @@ module.exports = {
     '@typescript-eslint/prefer-readonly': 'off',
     '@typescript-eslint/prefer-readonly-parameter-types': 'off',
     'functional/prefer-readonly-type': 'off',
+    // Error unused vars
+    '@typescript-eslint/no-unused-vars': 'error',
     // No any
     '@typescript-eslint/no-explicit-any': 'error',
     // Disable immutable data

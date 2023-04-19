@@ -18,8 +18,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByText('load'));
-
-    waitFor(() => {
+    await waitFor(() => {
       expect(canvas.getByAltText('image'));
     });
   },
@@ -30,8 +29,7 @@ export const Error: Story = {
     const canvas = within(canvasElement);
     await userEvent.clear(canvas.getByLabelText('url'));
     await userEvent.click(canvas.getByText('load'));
-
-    waitFor(() => {
+    await waitFor(() => {
       expect(canvas.getByTestId('result').textContent).toBe('error');
     });
   },

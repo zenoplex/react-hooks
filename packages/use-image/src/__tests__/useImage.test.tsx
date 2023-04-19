@@ -1,22 +1,5 @@
-import path from 'path';
-import React from 'react';
-import {
-  expect,
-  test,
-  describe,
-  afterEach,
-  beforeAll,
-  afterAll,
-  vi,
-} from 'vitest';
-import {
-  render,
-  screen,
-  waitFor,
-  cleanup,
-  renderHook,
-  act,
-} from '@testing-library/react';
+import { expect, test, describe, afterEach, beforeAll, afterAll } from 'vitest';
+import { cleanup, renderHook, act } from '@testing-library/react';
 import useImage from '../useImage';
 import { ImageLoadError } from '../errors';
 
