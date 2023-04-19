@@ -1,0 +1,97 @@
+version: 2.1
+
+orbs:
+  browser-tools: circleci/browser-tools@1.4.1
+
+parameters:
+  node_version:
+    type: string
+    default: 16.20.0
+    description: Node version to use
+
+executors:
+  default:
+    environment:
+      TZ: Asia/Tokyo
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node_version >>
+
+commands:
+  restore_npm_cache:
+    steps:
+    - restore_cache:
+        keys:
+        - npm-packages-{{ .Environment.CACHE_KEY }}-{{ checksum "package-lock.json" }}
+        - npm-packages-{{ .Environment.CACHE_KEY }}-
+  install_npm_packages:
+    steps:
+    - run:
+        name: Install npm packages
+        command: npm ci
+  save_npm_cache:
+    steps:
+    - save_cache:
+        key: npm-packages-{{ .Environment.CACHE_KEY }}-{{ checksum "package-lock.json" }}
+        paths:
+        - ./node_modules
+  persist_my_workspace:
+    steps:
+    - persist_to_workspace:
+        root: .
+        paths:
+        - .
+  attach_my_workspace:
+    steps:
+    - attach_workspace:
+        at: .
+
+jobs:
+  build:
+    executor: default
+    steps:
+      - checkout
+      - restore_npm_cache
+      - install_npm_packages
+      - save_npm_cache
+      - run:
+          name: Build
+          command: npm run build
+      - persist_my_workspace
+  lint:
+    executor: default
+    steps:
+      - checkout
+      - attach_my_workspace
+      - run:
+          name: Run lint
+          command: npm run lint
+  spec:
+    executor: default
+    steps:
+      - checkout
+      - attach_my_workspace
+      - run:
+          name: Run spec
+          command: npm run test
+  typecheck:
+    executor: default
+    steps:
+      - checkout
+      - attach_my_workspace
+      - run:
+          name: Run typecheck
+          command: npm run typecheck
+
+workflows:
+  ci:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - typecheck:
+          requires:
+            - build
+      - spec:
+          requires:
+            - build
