@@ -33,7 +33,7 @@
     "tsconfig": "*",
     "tsup": "6.7.0",
     "typescript": "4.9.5",
-    "vitest": "0.27.2"
+    "vitest": "0.30.1"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
