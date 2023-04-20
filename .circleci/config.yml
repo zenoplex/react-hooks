@@ -8,6 +8,10 @@ parameters:
     type: string
     default: 16.20.0
     description: Node version to use
+  playwright_version:
+    type: string
+    default: 1.32.1
+    description: Playwright version to use
 
 executors:
   default:
@@ -15,6 +19,9 @@ executors:
       TZ: Asia/Tokyo
     docker:
       - image: cimg/node:<< pipeline.parameters.node_version >>
+  playwright:
+    docker:
+      - image: mcr.microsoft.com/playwright:v<< pipeline.parameters.playwright_version >>-focal
 
 commands:
   restore_npm_cache:
@@ -81,6 +88,24 @@ jobs:
       - run:
           name: Run typecheck
           command: npm run typecheck
+  test_storybook:
+    executor: playwright
+    steps:
+      - checkout
+      - attach_my_workspace
+      - run:
+          name: Build storybook
+          command: npm run build-storybook --quiet -w workshop
+      - run:
+          name: Serve Storybook
+          command: npx serve -l 6006 ./apps/workshop/storybook-static
+          background: true
+      - run: 
+          name: Wait for serve
+          command: wget --tries 600 --waitretry 1 --retry-connrefused --timeout 300 -O /dev/null http://localhost:6006
+      - run:
+          name: Run storybook tests
+          command: npm run test:storybook -w workshop
 
 workflows:
   ci:
@@ -93,5 +118,8 @@ workflows:
           requires:
             - build
       - spec:
+          requires:
+            - build
+      - test_storybook:
           requires:
             - build
