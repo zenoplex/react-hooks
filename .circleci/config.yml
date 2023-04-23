@@ -51,6 +51,15 @@ commands:
     steps:
     - attach_workspace:
         at: .
+  install_awscli:
+    steps:
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+  
 
 jobs:
   build:
@@ -88,14 +97,41 @@ jobs:
       - run:
           name: Run typecheck
           command: npm run typecheck
-  test_storybook:
-    executor: playwright
+  build_storybook:
+    executor: default
     steps:
       - checkout
       - attach_my_workspace
       - run:
           name: Build storybook
           command: npm run build-storybook --quiet -w workshop
+      - persist_to_workspace:
+          name: Save storybook cache
+          root: .
+          paths:
+            - apps/workshop/storybook-static
+  upload_storybook:
+    executor: default
+    steps:
+      - install_awscli
+      - attach_workspace:
+          at: .
+      - run:
+          name: Upload storybook
+          command: |
+            if [ "${CIRCLE_PULL_REQUEST:-undef}" == "undef" ]; then
+              echo 'Skip uploading storybook'
+              exit 0
+            fi
+            aws s3 sync apps/workshop/storybook-static "s3://${S3_BUCKET_NAME}/${CIRCLE_PULL_REQUEST}" --delete
+            aws s3 cp --cache-control 'no-cache, must-revalidate, max-age=0' \
+              "apps/workshop/storybook-static/index.html" "s3://${S3_BUCKET_NAME}/${CIRCLE_PULL_REQUEST}/index.html"
+  test_storybook:
+    executor: playwright
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Serve Storybook
           command: npx serve -l 6006 ./apps/workshop/storybook-static
@@ -106,6 +142,8 @@ jobs:
       - run:
           name: Run storybook tests
           command: npm run test:storybook -w workshop
+
+
 
 workflows:
   ci:
@@ -120,6 +158,12 @@ workflows:
       - spec:
           requires:
             - build
+      - build_storybook:
+          requires:
+            - build      
       - test_storybook:
           requires:
-            - build
+            - build_storybook
+      - upload_storybook:
+          requires:
+            - build_storybook
