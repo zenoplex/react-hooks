@@ -144,8 +144,23 @@ jobs:
       - run:
           name: Run storybook tests
           command: npm run test:storybook -w workshop
-
-
+  vrt:
+    executor: default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - browser-tools/install-chrome
+      - run:
+          name: Serve Storybook
+          command: npx serve -l 6006 ./apps/workshop/storybook-static
+          background: true
+      - run:
+          name: Run storycap
+          command: $(npm bin)/storycap http://localhost:6006
+      - run:
+          name: Run regsuit
+          command: $(npm bin)/reg-suit run --config ./apps/workshop/regconfig.json
 
 workflows:
   ci:
@@ -167,5 +182,8 @@ workflows:
           requires:
             - build_storybook
       - upload_storybook:
+          requires:
+            - build_storybook
+      - vrt:
           requires:
             - build_storybook
