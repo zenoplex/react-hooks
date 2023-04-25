@@ -32,7 +32,11 @@
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "prop-types": "^15.8.1",
+    "reg-keygen-git-hash-plugin": "0.12.1",
+    "reg-publish-s3-plugin": "0.12.1",
+    "reg-suit": "0.12.1",
     "storybook": "^7.0.5",
+    "storycap": "4.1.1",
     "typescript": "^4.9.3",
     "vite": "^4.2.0"
   }
