@@ -21,7 +21,7 @@ curl -X POST \
       "state": "success",
       "description": "${description}",
       "target_url": "${REGSUIT_REPORT_URL}",
-      "context": "ci/circleci: '"$CIRCLECI_JOB_NAME"'"
+      "context": "ci/circleci: ${CIRCLE_JOB}"
     }
 EOS
 )"
