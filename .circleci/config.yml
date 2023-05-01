@@ -125,9 +125,9 @@ jobs:
             fi
             # CIRCLE_PULL_REQUEST returns "pull/n/"
             pr_number=$(echo ${CIRCLE_PULL_REQUEST} | sed -e 's/.*\///')
-            aws s3 sync apps/workshop/storybook-static "s3://${S3_BUCKET_NAME}/${pr_number}" --delete
+            aws s3 sync apps/workshop/storybook-static "s3://${STORYBOOK_S3_BUCKET_NAME}/${pr_number}" --delete
             aws s3 cp --cache-control 'no-cache, must-revalidate, max-age=0' \
-              "apps/workshop/storybook-static/index.html" "s3://${S3_BUCKET_NAME}/${pr_number}/index.html"
+              "apps/workshop/storybook-static/index.html" "s3://${STORYBOOK_S3_BUCKET_NAME}/${pr_number}/index.html"
   test_storybook:
     executor: playwright
     steps:
@@ -159,8 +159,16 @@ jobs:
           name: Run storycap
           command: $(npm bin)/storycap http://localhost:6006
       - run:
-          name: Run regsuit
-          command: $(npm bin)/reg-suit run --config ./apps/workshop/regconfig.json
+          name: Run regsuit and save output
+          command: $(npm bin)/reg-suit run --config ./apps/workshop/regconfig.json | tee /tmp/regsuit.log
+      - run:
+          name: Save output url to env
+          command: |
+            REGSUIT_REPORT_URL=$(cat /tmp/regsuit.log | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g' | grep 'Report URL: ' | sed 's/.*URL: //g')
+            echo "export REGSUIT_REPORT_URL=\"${REGSUIT_REPORT_URL}\"" >> $BASH_ENV
+      - run:
+          name: Report to github status
+          command: ./.circleci/regsuit_gh_status.sh
 
 workflows:
   ci:
