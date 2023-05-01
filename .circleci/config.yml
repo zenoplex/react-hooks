@@ -125,9 +125,9 @@ jobs:
             fi
             # CIRCLE_PULL_REQUEST returns "pull/n/"
             pr_number=$(echo ${CIRCLE_PULL_REQUEST} | sed -e 's/.*\///')
-            aws s3 sync apps/workshop/storybook-static "s3://${S3_BUCKET_NAME}/${pr_number}" --delete
+            aws s3 sync apps/workshop/storybook-static "s3://${STORYBOOK_S3_BUCKET_NAME}/${pr_number}" --delete
             aws s3 cp --cache-control 'no-cache, must-revalidate, max-age=0' \
-              "apps/workshop/storybook-static/index.html" "s3://${S3_BUCKET_NAME}/${pr_number}/index.html"
+              "apps/workshop/storybook-static/index.html" "s3://${STORYBOOK_S3_BUCKET_NAME}/${pr_number}/index.html"
   test_storybook:
     executor: playwright
     steps:
