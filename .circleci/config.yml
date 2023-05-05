@@ -64,6 +64,7 @@ commands:
 jobs:
   build:
     executor: default
+    resource_class: medium
     steps:
       - checkout
       - restore_npm_cache
@@ -75,6 +76,7 @@ jobs:
       - persist_my_workspace
   lint:
     executor: default
+    resource_class: small
     steps:
       - checkout
       - attach_my_workspace
@@ -83,6 +85,7 @@ jobs:
           command: npm run lint
   spec:
     executor: default
+    resource_class: small
     steps:
       - checkout
       - attach_my_workspace
@@ -91,6 +94,7 @@ jobs:
           command: npm run test
   typecheck:
     executor: default
+    resource_class: small
     steps:
       - checkout
       - attach_my_workspace
@@ -112,6 +116,7 @@ jobs:
             - apps/workshop/storybook-static
   upload_storybook:
     executor: default
+    resource_class: small
     steps:
       - install_awscli
       - attach_workspace:
@@ -130,6 +135,7 @@ jobs:
               "apps/workshop/storybook-static/index.html" "s3://${STORYBOOK_S3_BUCKET_NAME}/${pr_number}/index.html"
   test_storybook:
     executor: playwright
+    resource_class: medium
     steps:
       - checkout
       - attach_workspace:
@@ -146,6 +152,7 @@ jobs:
           command: npm run test:storybook -w workshop
   vrt:
     executor: default
+    resource_class: medium
     steps:
       - checkout
       - attach_workspace:
