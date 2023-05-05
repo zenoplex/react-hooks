@@ -85,7 +85,7 @@ jobs:
           command: npm run lint
   spec:
     executor: default
-    resource_class: small
+    resource_class: medium
     steps:
       - checkout
       - attach_my_workspace
