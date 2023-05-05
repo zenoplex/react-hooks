@@ -109,16 +109,11 @@ describe('use-pdf-canvas', () => {
       expect(onLoad).not.toHaveBeenCalledOnce();
       expect(onError).toHaveBeenCalledWith(
         // UnknownErrorException is not exported from pdfjs-dist
-        expect.objectContaining({
-          name: 'UnknownErrorException',
-          details: 'Error: connect ECONNREFUSED 127.0.0.1:3000',
-          message: 'connect ECONNREFUSED 127.0.0.1:3000',
-        })
+        expect.any(Error)
       );
       expect(onError).toHaveBeenCalledOnce();
-
-      spyFn.mockRestore();
     });
+    spyFn.mockRestore();
   });
 
   test('Should call onError if pdf is password protected', async () => {

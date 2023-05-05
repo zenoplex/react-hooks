@@ -6,7 +6,7 @@ orbs:
 parameters:
   node_version:
     type: string
-    default: 16.20.0
+    default: 18.16.0
     description: Node version to use
   playwright_version:
     type: string
@@ -157,10 +157,10 @@ jobs:
           background: true
       - run:
           name: Run storycap
-          command: $(npm bin)/storycap http://localhost:6006
+          command: npx storycap http://localhost:6006
       - run:
           name: Run regsuit and save output
-          command: $(npm bin)/reg-suit run --config ./apps/workshop/regconfig.json | tee /tmp/regsuit.log
+          command: npx reg-suit run --config ./apps/workshop/regconfig.json | tee /tmp/regsuit.log
       - run:
           name: Save output url to env
           command: |
