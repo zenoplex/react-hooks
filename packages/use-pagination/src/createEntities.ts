@@ -11,12 +11,14 @@ export const createPageEntity = (
   pageNum: number,
   currentPage: number
 ): PageEntity => ({
+  id: String(pageNum),
   type: 'page',
   value: pageNum,
   active: pageNum === currentPage,
 });
 
-export const createEllipsisEntity = (): EllipsisEntity => ({
+export const createEllipsisEntity = (id: 'left' | 'right'): EllipsisEntity => ({
+  id,
   type: 'ellipsis',
   value: null,
   active: false,
@@ -25,6 +27,7 @@ export const createEllipsisEntity = (): EllipsisEntity => ({
 export const createPreviousEntity = (currentPage: number): PreviousEntity => {
   const value = Math.max(1, currentPage - 1);
   return {
+    id: 'previous',
     type: 'previous',
     value: value,
     active: value === currentPage,
@@ -37,6 +40,7 @@ export const createNextEntity = (
 ): NextEntity => {
   const value = Math.min(totalPages, currentPage + 1);
   return {
+    id: 'next',
     type: 'next',
     value: value,
     active: value === currentPage,
@@ -45,6 +49,7 @@ export const createNextEntity = (
 
 export const createFirstEntity = (currentPage: number): FirstEntity => {
   return {
+    id: 'first',
     type: 'first',
     value: 1,
     active: currentPage === 1,
@@ -56,6 +61,7 @@ export const createLastEntity = (
   totalPages: number
 ): LastEntity => {
   return {
+    id: 'last',
     type: 'last',
     value: totalPages,
     active: totalPages === currentPage,

@@ -51,7 +51,7 @@ const createPageEntities: CreatePageEntities = ({
       ...createRange(1, leftItemCount).map((page) =>
         createPageEntity(page, currentPage)
       ),
-      createEllipsisEntity(),
+      createEllipsisEntity('right'),
       ...createRange(totalPages - (boundaries - 1), totalPages).map((page) =>
         createPageEntity(page, currentPage)
       ),
@@ -64,7 +64,7 @@ const createPageEntities: CreatePageEntities = ({
       ...createRange(1, boundaries).map((page) =>
         createPageEntity(page, currentPage)
       ),
-      createEllipsisEntity(),
+      createEllipsisEntity('left'),
       ...createRange(totalPages - rightItemCount, totalPages).map((page) =>
         createPageEntity(page, currentPage)
       ),
@@ -75,11 +75,11 @@ const createPageEntities: CreatePageEntities = ({
     ...createRange(1, boundaries).map((page) =>
       createPageEntity(page, currentPage)
     ),
-    createEllipsisEntity(),
+    createEllipsisEntity('left'),
     ...createRange(leftSiblingIndex, rightSiblingIndex).map((page) =>
       createPageEntity(page, currentPage)
     ),
-    createEllipsisEntity(),
+    createEllipsisEntity('right'),
     ...createRange(totalPages - boundaries + 1, totalPages).map((page) =>
       createPageEntity(page, currentPage)
     ),
