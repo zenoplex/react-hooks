@@ -1,5 +1,12 @@
 # @gen/use-pdf-canvas
 
+## 0.0.3
+
+### Patch Changes
+
+- Add use-pagination
+- Update packages
+
 ## 0.0.2
 
 ### Patch Changes
