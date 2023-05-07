@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "lint": "TIMING=1 eslint \"**/*.{js,ts,jsx,tsx}\"",
     "typecheck": "tsc --noEmit",
     "dev": "vite",
     "preview": "vite preview",
