@@ -13,6 +13,8 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'functional', 'import'],
   rules: {
+    // No anonymous default export
+    'import/no-anonymous-default-export': 'error',
     // Disable readonly since its tedious
     '@typescript-eslint/prefer-readonly': 'off',
     '@typescript-eslint/prefer-readonly-parameter-types': 'off',
