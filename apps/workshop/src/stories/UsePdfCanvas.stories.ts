@@ -12,4 +12,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  parameters: {
+    screenshot: {
+      // waitFor may not be working as intended so resolve a fixed delay
+      delay: 500,
+    },
+  },
+};
