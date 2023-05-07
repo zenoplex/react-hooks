@@ -2,8 +2,6 @@ import type { Preview } from '@storybook/react';
 import { withScreenshot } from 'storycap';
 import '../src/index.css';
 
-
-
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -15,8 +13,9 @@ const preview: Preview = {
     },
   },
   decorators: [
+    // @ts-expect-error storycap types are not up to date
     withScreenshot,
-  ]
+  ],
 };
 
 export default preview;
