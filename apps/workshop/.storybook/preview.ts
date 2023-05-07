@@ -1,5 +1,8 @@
 import type { Preview } from '@storybook/react';
+import { withScreenshot } from 'storycap';
 import '../src/index.css';
+
+
 
 const preview: Preview = {
   parameters: {
@@ -11,6 +14,9 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    withScreenshot,
+  ]
 };
 
 export default preview;
