@@ -84,7 +84,7 @@ export const UsePagination: React.FC<Props> = (props) => {
         aria-label="Pagination"
       >
         {pagination.map((page) => {
-          return <Component key={page.value} {...page}></Component>;
+          return <Component key={page.id} {...page}></Component>;
         })}
       </nav>
     </>
