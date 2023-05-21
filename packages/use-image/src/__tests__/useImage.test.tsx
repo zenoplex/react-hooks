@@ -1,9 +1,8 @@
 import { expect, test, describe, afterEach, beforeAll, afterAll } from 'vitest';
 import { cleanup, renderHook, act } from '@testing-library/react';
+import { HTMLProps } from 'react';
 import useImage from '../useImage';
 import { ImageLoadError } from '../errors';
-
-// type Props = Parameters<typeof useImage>[0];
 
 describe('useImage', () => {
   // eslint-disable-next-line functional/no-let
@@ -21,21 +20,29 @@ describe('useImage', () => {
     // eslint-disable-next-line functional/immutable-data
     Object.defineProperty(global.Image.prototype, 'src', {
       get() {
-        return this.getAttribute('src');
+        const self = this as HTMLImageElement;
+        return self.getAttribute('src');
       },
-      set(src) {
+      set(src: HTMLProps<HTMLImageElement>['src']) {
+        if (!src) return;
+        const self = this as HTMLImageElement;
         if (src === LOAD_ERROR_SRC) {
-          setTimeout(() => this.onerror(new Error('error')));
+          setTimeout(() => {
+            // @ts-expect-error Mocking error
+            self.onerror?.(new Error('error'));
+          });
         } else if (src === LOAD_SUCCESS_SRC) {
-          setTimeout(() => this.onload());
+          setTimeout(() => {
+            self.onload?.(new Event('load'));
+          });
         }
-        this.setAttribute('src', src);
+        self.setAttribute('src', src);
       },
     });
   });
 
   afterAll(() => {
-    // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-unsafe-argument
     Object.defineProperty(global.Image.prototype, 'src', originalPrototypeSrc);
   });
 
