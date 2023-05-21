@@ -7,11 +7,11 @@ export const UseImage: React.FC = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const onSubmit = React.useCallback<React.FormEventHandler>(
-    (e) => {
+    async (e) => {
       e.preventDefault();
       if (!inputRef.current) return;
 
-      load(inputRef.current.value);
+      await load(inputRef.current.value);
     },
     [load]
   );
