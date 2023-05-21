@@ -56,7 +56,9 @@ export const usePdfCanvas: UsePdfCanvas = ({
 
           const pageNums: number[] = pageNum
             ? [pageNum]
-            : [...new Array(pdf.numPages)].map((_, idx) => idx + 1);
+            : [...(new Array(pdf.numPages) as number[])].map(
+                (_, idx) => idx + 1
+              );
           const promises = pageNums.map((n) => pdf.getPage(n));
           const pdfPages = await Promise.all(promises);
 
