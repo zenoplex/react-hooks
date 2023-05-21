@@ -19,7 +19,7 @@ interface UsePdfCanvasOptions {
 }
 
 interface UsePdfCanvas {
-  (options: UsePdfCanvasOptions): [(node: HTMLDivElement) => Promise<void>];
+  (options: UsePdfCanvasOptions): [(node: HTMLDivElement) => void];
 }
 
 export const usePdfCanvas: UsePdfCanvas = ({
