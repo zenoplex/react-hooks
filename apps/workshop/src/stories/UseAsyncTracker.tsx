@@ -1,60 +1,84 @@
-import { useAsyncTracker, Provider } from '@gen/async-tracker';
-
+import { createContext } from '@gen/async-tracker';
 import React from 'react';
 
-const Child: React.FC = () => {
-  // const { isInProgress } = useAsyncTracker();
-  // console.log(isInProgress);
+const { Provider, useAsyncTracker } = createContext({
+  global: 0,
+  other: 0,
+});
 
-  // return <div>{isInProgress ? 'loading' : 'not loading'}</div>;
-  return null;
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+const Button: React.FC<ButtonProps> = (props) => {
+  return (
+    <button
+      {...props}
+      type="button"
+      className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+    ></button>
+  );
 };
 
-const TextInput = () => {
-  const [fieldValue, trackPromise] = useAsyncTracker(
-    (store) => store['global']
-  );
+const GlobalStatus: React.FC = () => {
+  const [count] = useAsyncTracker((store) => store.global);
+
+  return <div>{count > 0 ? 'global loading' : 'global not loading'}</div>;
+};
+
+const OtherStatus: React.FC = () => {
+  const [count] = useAsyncTracker((store) => store.other);
+
+  return <div>{count > 0 ? 'other loading' : 'other not loading'}</div>;
+};
+
+const LoadGlobal: React.FC = () => {
+  const [count, trackPromise] = useAsyncTracker((store) => store.global);
 
   const asyncFn = async (): Promise<number> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(123);
-      }, 2000);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000);
     });
-  };
 
-  const asyncFail = async (): Promise<void> => {
-    return new Promise((_resolve, reject) => {
-      setTimeout(reject, 2000);
-    });
+    return Date.now();
   };
-
-  const a: Promise<number> = trackPromise(asyncFn());
 
   return (
-    <div className="field">
-      <input type="checkbox" checked={fieldValue}></input>
+    <div>
+      <Button
+        disabled={count > 0}
+        onClick={() => void trackPromise(asyncFn(), 'global')}
+      >
+        global load
+      </Button>
+    </div>
+  );
+};
 
-      <div>
-        <button disabled={fieldValue > 0} onClick={() => void a}>
-          button
-        </button>
-      </div>
-      <div>
-        <button
-          disabled={fieldValue > 0}
-          onClick={() => trackPromise(asyncFail())}
-        >
-          reject
-        </button>
-      </div>
+const LoadOther: React.FC = () => {
+  const [count, trackPromise] = useAsyncTracker((store) => store.other);
+
+  const asyncFail = async (): Promise<number> => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000);
+    });
+    throw new Error('fail');
+  };
+
+  return (
+    <div>
+      <Button
+        disabled={count > 0}
+        onClick={() => void trackPromise(asyncFail(), 'other')}
+        // onClick={() => asyncFail()}
+      >
+        other load
+      </Button>
     </div>
   );
 };
 
 export const UseAsyncTracker: React.FC = () => {
   // const { isInProgress } = useAsyncTracker();
-  const [state, setState] = React.useState(false);
+  const [state, setState] = React.useState(true);
 
   // const onClick = async (): Promise<void> => {
   //   await trackPromise(asyncFn());
@@ -77,10 +101,15 @@ export const UseAsyncTracker: React.FC = () => {
           Show child
         </label>
 
-        {state && <Child></Child>}
+        {state && (
+          <div>
+            <GlobalStatus />
+            <OtherStatus />
+          </div>
+        )}
 
-        <TextInput />
-        <TextInput />
+        <LoadGlobal />
+        <LoadOther />
       </div>
     </Provider>
   );
