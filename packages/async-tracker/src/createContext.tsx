@@ -77,7 +77,9 @@ export const createContext = <S extends Record<string, number>>(
     const trackPromise = React.useCallback<TrackPromise>(
       (promise, key) => {
         const currentCount = store.get()[key];
-        store.set({ [key]: currentCount + 1 } as Partial<S>);
+        store.set({
+          [key]: Math.min(currentCount + 1, Number.MAX_SAFE_INTEGER),
+        } as Partial<S>);
 
         const onResolve = (): void => {
           const currentCount = store.get()[key];

@@ -44,10 +44,10 @@ const LoadGlobal: React.FC = () => {
   return (
     <div>
       <Button
-        disabled={count > 0}
+        // disabled={count > 0}
         onClick={() => void trackPromise(asyncFn(), 'global')}
       >
-        global load
+        global: {count}
       </Button>
     </div>
   );
@@ -66,11 +66,11 @@ const LoadOther: React.FC = () => {
   return (
     <div>
       <Button
-        disabled={count > 0}
+        // disabled={count > 0}
         onClick={() => void trackPromise(asyncFail(), 'other')}
         // onClick={() => asyncFail()}
       >
-        other load
+        other: {count}
       </Button>
     </div>
   );
