@@ -1,37 +1,49 @@
 import React from 'react';
 import { Emitter } from './events';
 
-type Store = { global: number; other: number };
+// type Store = { global: number; [key: string]: number };
 
-type Place = keyof Store;
+// type Place = 'global' & string;
 
 const EMITTER_KEY = 'test';
 
-type EmitterEvent = {
-  [EMITTER_KEY]: { isInProgress: boolean; location: Place };
-};
+// type EmitterEvent = {
+//   [EMITTER_KEY]: { isInProgress: boolean; location: Place };
+// };
 
-type UseStoreData = () => {
-  get: () => Store;
-  set: (value: Partial<Store>) => void;
+// type UseStoreData = <T extends Record<string, number>>(
+//   initialStore: T
+// ) => {
+//   get: () => T;
+//   set: (value: Partial<T>) => void;
+//   subscribe: (callback: () => void) => () => void;
+//   emitter: Emitter<{
+//     [EMITTER_KEY]: { isInProgress: boolean; location: keyof T };
+//   }>;
+// };
+
+const useStoreData = <T extends Record<string, number>>(
+  initialStore: T
+): {
+  get: () => T;
+  set: (value: Partial<T>) => void;
   subscribe: (callback: () => void) => () => void;
-  emitter: Emitter<EmitterEvent>;
-};
-
-const useStoreData: UseStoreData = () => {
+  emitter: Emitter<{
+    [EMITTER_KEY]: { isInProgress: boolean; location: keyof T };
+  }>;
+} => {
   const emitterRef = React.useRef(
-    new Emitter<{ test: { isInProgress: boolean; location: Place } }>()
+    new Emitter<{
+      [EMITTER_KEY]: { isInProgress: boolean; location: keyof T };
+    }>()
   );
-  const store = React.useRef<Record<Place, number>>({
-    global: 0,
-    other: 0,
-  });
+  const store = React.useRef<T>(initialStore);
 
   const get = React.useCallback(() => store.current, []);
 
   const subscribers = React.useRef(new Set<() => void>());
 
-  const set = React.useCallback((value: Partial<Store>) => {
+  const set = React.useCallback((value: Partial<T>) => {
     // eslint-disable-next-line functional/immutable-data
     store.current = { ...store.current, ...value };
     subscribers.current.forEach((callback) => callback());
@@ -46,7 +58,7 @@ const useStoreData: UseStoreData = () => {
     const loc = location ?? 'global';
     const count = store.current[loc];
     const newCount = isInProgress ? count + 1 : Math.max(count - 1, 0);
-    set({ [loc]: newCount });
+    set({ [loc]: newCount } as Partial<T>);
   });
 
   return {
@@ -57,17 +69,23 @@ const useStoreData: UseStoreData = () => {
   };
 };
 
-type UseStoreDataReturnType = ReturnType<typeof useStoreData>;
+type UseStoreDataReturnType = ReturnType<
+  typeof useStoreData<Record<string, number>>
+>;
 
 const StoreContext = React.createContext<UseStoreDataReturnType | null>(null);
 
 interface Props {
+  store?: Record<string, number>;
   children: React.ReactNode;
 }
 
-export const Provider: React.FC<Props> = ({ children }) => {
+export const Provider: React.FC<Props> = ({
+  store = { global: 0 },
+  children,
+}) => {
   return (
-    <StoreContext.Provider value={useStoreData()}>
+    <StoreContext.Provider value={useStoreData(store)}>
       {children}
     </StoreContext.Provider>
   );
@@ -75,15 +93,17 @@ export const Provider: React.FC<Props> = ({ children }) => {
 
 type TrackPromise = <P extends Promise<unknown>>(promise: P) => P;
 
-type UseAsyncTracker = <T>(selector: (store: Store) => T) => [T, TrackPromise];
+// type UseAsyncTracker = <T>(selector: (store: Store) => T) => [T, TrackPromise];
 
-export const useAsyncTracker: UseAsyncTracker = (selector) => {
+export const useAsyncTracker = <S, T>(
+  selector: (store: S) => T
+): [T, TrackPromise] => {
   const store = React.useContext(StoreContext);
   if (!store) {
     throw new Error('Provider missing for useAsyncTracker.');
   }
 
-  const [state, setState] = React.useState(() => selector(store.get()));
+  const [state, setState] = React.useState(() => selector(store.get() as S));
 
   const trackPromise = React.useCallback<TrackPromise>(
     (promise) => {
@@ -106,7 +126,7 @@ export const useAsyncTracker: UseAsyncTracker = (selector) => {
 
   // Subscribe to store changes
   React.useEffect(() => {
-    return store.subscribe(() => setState(() => selector(store.get())));
+    return store.subscribe(() => setState(() => selector(store.get() as S)));
   }, [selector, store]);
 
   // For react 18
