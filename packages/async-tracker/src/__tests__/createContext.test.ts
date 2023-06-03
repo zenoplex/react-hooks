@@ -1,4 +1,4 @@
-import { expect, test, describe, afterEach } from 'vitest';
+import { expect, test, describe, afterEach, vi } from 'vitest';
 import { cleanup, renderHook, act, waitFor } from '@testing-library/react';
 import { createContext } from '../createContext';
 
@@ -67,14 +67,12 @@ describe('createContext', () => {
       expect(result.current[0]).toBe(0);
       const trackAsync = result.current[1];
 
+      // https://github.com/vitest-dev/vitest/issues/3412
+      const promise = Promise.reject();
+
       act(() => {
-        // catch is required to prevent unhandled promise rejection
-        // https://github.com/vitest-dev/vitest/issues/3412
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const promise = Promise.reject().catch(() => {});
         void trackAsync(promise, 'foo');
       });
-
       expect(result.current[0]).toBe(1);
 
       // Wait for promise to resolve
