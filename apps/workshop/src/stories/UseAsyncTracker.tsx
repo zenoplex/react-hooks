@@ -56,11 +56,11 @@ const LoadGlobal: React.FC = () => {
 const LoadOther: React.FC = () => {
   const [count, trackPromise] = useAsyncTracker((store) => store.other);
 
-  const asyncFail = async (): Promise<number> => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 2000);
-    });
-    throw new Error('fail');
+  const asyncFail = async (): Promise<void> => {
+    const response = await fetch(
+      'https://jsonplaceholder.typicode.com/todos/1'
+    );
+    throw new Error(response.statusText);
   };
 
   return (
@@ -68,6 +68,7 @@ const LoadOther: React.FC = () => {
       <Button
         // disabled={count > 0}
         onClick={() => void trackPromise(asyncFail(), 'other')}
+        // onClick={async () => await asyncFail()}
         // onClick={() => asyncFail()}
       >
         other: {count}
@@ -80,6 +81,16 @@ export const UseAsyncTracker: React.FC = () => {
   // const { isInProgress } = useAsyncTracker();
   const [state, setState] = React.useState(true);
 
+  React.useEffect(() => {
+    const handler = (): void => {
+      console.log('unhandled');
+    };
+    window.addEventListener('unhandledrejection', handler);
+
+    return () => {
+      window.removeEventListener('unhandledrejection', handler);
+    };
+  });
   // const onClick = async (): Promise<void> => {
   //   await trackPromise(asyncFn());
   // };
