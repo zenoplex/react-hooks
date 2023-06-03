@@ -1,4 +1,4 @@
-import { expect, test, describe, afterEach, vi } from 'vitest';
+import { expect, test, describe, afterEach } from 'vitest';
 import { cleanup, renderHook, act, waitFor } from '@testing-library/react';
 import { createContext } from '../createContext';
 
