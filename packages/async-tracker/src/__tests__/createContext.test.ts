@@ -58,9 +58,7 @@ describe('createContext', () => {
       expect(result.current[0]).toBe(0);
     });
 
-    // Could not get this test to pass.
-    // Unhandled error is thrown even with try/catch
-    test.skip('Should increment count then decrement on reject', async () => {
+    test('Should increment count then decrement on reject', async () => {
       const { result } = renderHook(
         () => useAsyncTracker((store) => store.foo),
         { wrapper: Provider }
@@ -69,14 +67,12 @@ describe('createContext', () => {
       expect(result.current[0]).toBe(0);
       const trackAsync = result.current[1];
 
-      // https://github.com/vitest-dev/vitest/issues/3412
-      const promise = Promise.reject();
-
       act(() => {
-        void trackAsync(promise, 'foo');
+        void expect(
+          trackAsync(Promise.reject(), 'foo')
+        ).rejects.toBeUndefined();
       });
       expect(result.current[0]).toBe(1);
-
       // Wait for promise to resolve
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       await waitFor(() => {});
