@@ -85,8 +85,7 @@ export const createContext = <S extends Record<string, number>>(
           const currentCount = store.get()[key];
           store.set({ [key]: Math.max(currentCount - 1, 0) } as Partial<S>);
         };
-        // Using finally instead of then to avoid changing the promise value
-        promise.finally(onResolve);
+        promise.then(onResolve, onResolve);
         return promise;
       },
       [store]
