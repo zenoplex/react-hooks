@@ -1,5 +1,5 @@
 import { expect, test, describe, afterEach } from 'vitest';
-import { cleanup, renderHook, act, waitFor } from '@testing-library/react';
+import { cleanup, renderHook, act } from '@testing-library/react';
 import { createContext } from '../createContext';
 
 describe('createContext', () => {
@@ -53,8 +53,7 @@ describe('createContext', () => {
       expect(result.current[0]).toBe(1);
 
       // Wait for promise to resolve
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      await waitFor(() => {});
+      await act(() => Promise.resolve());
       expect(result.current[0]).toBe(0);
     });
 
@@ -73,11 +72,48 @@ describe('createContext', () => {
         ).rejects.toBeUndefined();
       });
       expect(result.current[0]).toBe(1);
+
       // Wait for promise to resolve
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      await waitFor(() => {});
+      await act(() => Promise.resolve());
 
       expect(result.current[0]).toBe(0);
+    });
+
+    test.only('Should work in multiple state', async () => {
+      const { result } = renderHook(() => useAsyncTracker((store) => store), {
+        wrapper: Provider,
+      });
+
+      expect(result.current[0]).toStrictEqual({
+        foo: 0,
+        bar: 0,
+      });
+      const trackAsync = result.current[1];
+
+      act(() => {
+        void trackAsync(Promise.resolve(), 'foo');
+      });
+      expect(result.current[0]).toStrictEqual({
+        foo: 1,
+        bar: 0,
+      });
+
+      act(() => {
+        void trackAsync(Promise.resolve(), 'bar');
+      });
+
+      expect(result.current[0]).toStrictEqual({
+        foo: 1,
+        bar: 1,
+      });
+
+      // I wanted to wait for single promise to resolve but await act resolves all promises
+      // Wait for promise to resolve
+      await act(() => Promise.resolve());
+      expect(result.current[0]).toStrictEqual({
+        foo: 0,
+        bar: 0,
+      });
     });
   });
 });
