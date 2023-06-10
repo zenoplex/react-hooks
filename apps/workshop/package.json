@@ -13,6 +13,7 @@
     "test:storybook": "test-storybook"
   },
   "dependencies": {
+    "@gen/use-async-tracker": "*",
     "@gen/use-image": "*",
     "@gen/use-pagination": "*",
     "@gen/use-pdf-canvas": "*",
