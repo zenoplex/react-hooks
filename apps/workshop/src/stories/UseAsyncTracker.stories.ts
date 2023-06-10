@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 import { UseAsyncTracker } from './UseAsyncTracker';
+import { sleep } from './sleep';
 
 const meta = {
   component: UseAsyncTracker,
@@ -13,6 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   play: async ({ canvasElement }) => {
+    await sleep();
     const canvas = within(canvasElement);
 
     expect(canvas.getByTestId('global-count').textContent).toBe(
@@ -22,7 +24,7 @@ export const Default: Story = {
       'Other count: 0'
     );
 
-    await userEvent.click(canvas.getByText('load other'));
+    await userEvent.click(canvas.getByText('load other 2'));
     await waitFor(() => {
       expect(canvas.getByTestId('other-count').textContent).toBe(
         'Other count: 1'
