@@ -149,7 +149,7 @@ jobs:
           command: wget --tries 600 --waitretry 1 --retry-connrefused --timeout 300 -O /dev/null http://localhost:6006
       - run:
           name: Run storybook tests
-          command: npm run test:storybook -w workshop -- --maxWorkers=2
+          command: npm run test:storybook -w workshop -- --maxWorkers=2 --coverage
   vrt:
     executor: default
     resource_class: medium
