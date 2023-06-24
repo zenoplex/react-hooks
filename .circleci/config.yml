@@ -129,12 +129,17 @@ jobs:
               exit 0
             fi
             # CIRCLE_PULL_REQUEST returns "pull/n/"
-            pr_number=$(echo ${CIRCLE_PULL_REQUEST} | sed -e 's/.*\///')
+            PR_NUMBER=$(echo ${CIRCLE_PULL_REQUEST} | sed -e 's/.*\///')
             # Bucket path
-            S3_BUCKET_PATH="s3://${STORYBOOK_S3_BUCKET_NAME}/${pr_number}"
+            S3_BUCKET_PATH="s3://${STORYBOOK_S3_BUCKET_NAME}/${PR_NUMBER}"
             aws s3 sync apps/workshop/storybook-static "${S3_BUCKET_PATH}" --delete
             aws s3 cp --cache-control 'no-cache, must-revalidate, max-age=0' \
               "apps/workshop/storybook-static/index.html" "${S3_BUCKET_PATH}/index.html"
+            
+            # report to github status
+            STORYBOOK_S3_BUCKET_NAME=${STORYBOOK_S3_BUCKET_NAME} \
+            PR_NUMBER=${PR_NUMBER} \
+              ./.circleci/storybook_gh_status.sh
   test_storybook:
     executor: playwright
     resource_class: medium
