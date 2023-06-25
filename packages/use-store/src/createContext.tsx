@@ -1,16 +1,19 @@
 import React from 'react';
 
+type Store<S> = {
+  get: () => S;
+  set: (value: Partial<S>) => void;
+  subscribe: (callback: () => void) => () => void;
+};
+
 export const createContext = <S extends Record<string, unknown>>(
   initialStore: S
 ): {
   useStore: <T>(selector: (store: S) => T) => [T, (value: Partial<S>) => void];
+  Context: React.Context<Store<S> | null>;
   Provider: React.FC<{ children: React.ReactNode }>;
 } => {
-  type UseStoreInternal = () => {
-    get: () => S;
-    set: (value: Partial<S>) => void;
-    subscribe: (callback: () => void) => () => void;
-  };
+  type UseStoreInternal = () => Store<S>;
 
   /**
    * Setup internal store
@@ -43,7 +46,7 @@ export const createContext = <S extends Record<string, unknown>>(
   type UseStoreDataReturnType = ReturnType<typeof useStoreInternal>;
 
   /** Context for store */
-  const StoreContext = React.createContext<UseStoreDataReturnType | null>(null);
+  const Context = React.createContext<UseStoreDataReturnType | null>(null);
 
   interface Props {
     children: React.ReactNode;
@@ -52,9 +55,7 @@ export const createContext = <S extends Record<string, unknown>>(
   /** Provider for store context */
   const Provider: React.FC<Props> = ({ children }) => {
     return (
-      <StoreContext.Provider value={useStoreInternal()}>
-        {children}
-      </StoreContext.Provider>
+      <Context.Provider value={useStoreInternal()}>{children}</Context.Provider>
     );
   };
 
@@ -64,7 +65,7 @@ export const createContext = <S extends Record<string, unknown>>(
 
   /** hooks retuning state and setter for store */
   const useStore: UseStore = (selector) => {
-    const store = React.useContext(StoreContext);
+    const store = React.useContext(Context);
     if (!store) {
       throw new Error('Provider required for useStore.');
     }
@@ -88,6 +89,7 @@ export const createContext = <S extends Record<string, unknown>>(
 
   return {
     Provider,
+    Context,
     useStore,
   };
 };
