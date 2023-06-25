@@ -161,6 +161,8 @@ jobs:
             JEST_JUNIT_OUTPUT_DIR: /tmp/reports/junit
       - store_test_results:
           path: /tmp/reports/junit
+      - store_artifacts:
+          path: apps/workshop/.nyc_output
   vrt:
     executor: default
     resource_class: medium
