@@ -1,4 +1,5 @@
 import React from 'react';
+import createStoreContext from '@gen/use-store';
 
 export const createContext = <S extends Record<string, number>>(
   initialStore: S
@@ -8,58 +9,7 @@ export const createContext = <S extends Record<string, number>>(
   ) => [T, <P extends Promise<unknown>>(promise: P, key: keyof S) => P];
   Provider: React.FC<{ children: React.ReactNode }>;
 } => {
-  type UseStore = () => {
-    get: () => S;
-    set: (value: Partial<S>) => void;
-    subscribe: (callback: () => void) => () => void;
-  };
-
-  /**
-   * Setup internal store
-   */
-  const useStore: UseStore = () => {
-    const store = React.useRef<S>(initialStore);
-
-    const get = React.useCallback(() => store.current, []);
-
-    const subscribers = React.useRef(new Set<() => void>());
-
-    const set = React.useCallback((value: Partial<S>) => {
-      // eslint-disable-next-line functional/immutable-data
-      store.current = { ...store.current, ...value };
-      subscribers.current.forEach((callback) => callback());
-    }, []);
-
-    const subscribe = React.useCallback((callback: () => void) => {
-      subscribers.current.add(callback);
-      return () => subscribers.current.delete(callback);
-    }, []);
-
-    return {
-      get,
-      set,
-      subscribe,
-    };
-  };
-
-  type UseStoreDataReturnType = ReturnType<typeof useStore>;
-
-  const StoreContext = React.createContext<UseStoreDataReturnType | null>(null);
-
-  interface Props {
-    children: React.ReactNode;
-  }
-
-  /**
-   * Provider for store context
-   */
-  const Provider: React.FC<Props> = ({ children }) => {
-    return (
-      <StoreContext.Provider value={useStore()}>
-        {children}
-      </StoreContext.Provider>
-    );
-  };
+  const { Context, Provider } = createStoreContext(initialStore);
 
   type TrackPromise = <P extends Promise<unknown>>(
     promise: P,
@@ -68,7 +18,7 @@ export const createContext = <S extends Record<string, number>>(
   type UseAsyncTracker = <T>(selector: (store: S) => T) => [T, TrackPromise];
 
   const useAsyncTracker: UseAsyncTracker = (selector) => {
-    const store = React.useContext(StoreContext);
+    const store = React.useContext(Context);
     if (!store) {
       throw new Error('Provider missing for useAsyncTracker.');
     }
