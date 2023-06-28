@@ -18,6 +18,9 @@
     "test": {
       "outputs": []
     },
+    "test:ci": {
+      "outputs": ["coverage/**"]
+    },
     "test:watch": {
       "cache": false
     }
