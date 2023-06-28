@@ -91,7 +91,9 @@ jobs:
       - attach_my_workspace
       - run:
           name: Run spec
-          command: npm run test
+          command: npm run test:ci
+      - store_test_results:
+          path: coverages
   typecheck:
     executor: default
     resource_class: small
