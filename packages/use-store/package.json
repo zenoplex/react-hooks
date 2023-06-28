@@ -8,6 +8,7 @@
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:ci": "npm run test -- --reporter=junit --outputFile=../../coverages/use-store.xml",
     "test:watch": "vitest",
     "build": "tsup"
   },
