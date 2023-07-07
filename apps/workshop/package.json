@@ -35,7 +35,7 @@
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react-swc": "3.3.2",
     "autoprefixer": "10.4.14",
-    "postcss": "8.4.24",
+    "postcss": "8.4.25",
     "prop-types": "^15.8.1",
     "reg-keygen-git-hash-plugin": "0.12.2",
     "reg-publish-s3-plugin": "0.12.2",
