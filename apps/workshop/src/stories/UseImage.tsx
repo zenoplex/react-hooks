@@ -25,7 +25,7 @@ export const UseImage: React.FC = () => {
           id="url"
           type="text"
           name="url"
-          defaultValue="/200x200.jpg"
+          defaultValue="./200x200.jpg"
         />
         <button type="submit">load</button>
       </form>
