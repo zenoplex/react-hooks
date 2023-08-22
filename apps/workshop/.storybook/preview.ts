@@ -1,6 +1,10 @@
 import type { Preview } from '@storybook/react';
 import { withScreenshot } from 'storycap';
 import '../src/index.css';
+import { initialize, mswLoader } from 'msw-storybook-addon';
+
+// Initialize MSW
+initialize();
 
 const preview: Preview = {
   parameters: {
@@ -16,6 +20,7 @@ const preview: Preview = {
     // @ts-expect-error storycap types are not up to date
     withScreenshot,
   ],
+  loaders: [mswLoader],
 };
 
 export default preview;
