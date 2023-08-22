@@ -137,6 +137,8 @@ jobs:
             aws s3 sync apps/workshop/storybook-static "${S3_BUCKET_PATH}" --delete
             aws s3 cp --cache-control 'no-cache, must-revalidate, max-age=0' \
               "apps/workshop/storybook-static/index.html" "${S3_BUCKET_PATH}/index.html"
+            # Workaround for msw
+            aws s3 cp "apps/workshop/storybook-static/mockServiceWorker.js" "s3://${STORYBOOK_S3_BUCKET_NAME}/mockServiceWorker.js"
             
             # report to github status
             STORYBOOK_S3_BUCKET_NAME=${STORYBOOK_S3_BUCKET_NAME} \
