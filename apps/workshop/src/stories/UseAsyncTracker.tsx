@@ -63,6 +63,14 @@ const Buttons: React.FC = () => {
 };
 
 export const UseAsyncTracker: React.FC = () => {
+  React.useEffect(() => {
+    const fn = async (): Promise<void> => {
+      const res = await fetch('/user');
+      console.log(await res.json());
+    };
+
+    void fn();
+  }, []);
   return (
     <Provider>
       <First />
