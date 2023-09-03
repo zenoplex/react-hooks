@@ -1,7 +1,7 @@
 import React, { RefCallback } from 'react';
 
 interface UseClickOutsideOptions {
-  onClickOutside: () => void;
+  onClickOutside: (e: MouseEvent) => void;
 }
 
 interface UseClickOutside {
@@ -17,7 +17,7 @@ export const useClickOutside: UseClickOutside = ({ onClickOutside }) => {
     if (!(e.target instanceof Node)) return;
     const isInside = ref.current && ref.current.contains(e.target);
 
-    if (!isInside) callbackRef.current();
+    if (!isInside) callbackRef.current(e);
   }, []);
 
   const setRef = React.useCallback(

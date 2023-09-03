@@ -52,7 +52,7 @@ describe('use-click-outside', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'outside' }));
 
-    expect(onClickOutside).toHaveBeenCalledOnce();
+    expect(onClickOutside).toHaveBeenNthCalledWith(1, expect.any(MouseEvent));
   });
 
   test('Should call onClickOutside if clicked outside(lazy)', async () => {
@@ -62,7 +62,7 @@ describe('use-click-outside', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'outside' }));
 
-    expect(onClickOutside).toHaveBeenCalledOnce();
+    expect(onClickOutside).toHaveBeenNthCalledWith(1, expect.any(MouseEvent));
   });
 
   test('Should not call onClickOutside if clicked inside', async () => {
@@ -72,7 +72,7 @@ describe('use-click-outside', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'inside' }));
 
-    expect(onClickOutside).not.toHaveBeenCalledOnce();
+    expect(onClickOutside).not.toHaveBeenCalled();
   });
 
   test('Should not call onClickOutside if clicked inside(lazy)', async () => {
@@ -82,6 +82,6 @@ describe('use-click-outside', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'inside' }));
 
-    expect(onClickOutside).not.toHaveBeenCalledOnce();
+    expect(onClickOutside).not.toHaveBeenCalled();
   });
 });
