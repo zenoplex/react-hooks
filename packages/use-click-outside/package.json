@@ -1,0 +1,43 @@
+{
+  "name": "@gen/use-click-outside",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:ci": "npm run test -- --reporter=junit --outputFile=../../coverages/use-click-outside.xml",
+    "test:watch": "vitest",
+    "build": "tsup"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "devDependencies": {
+    "@testing-library/react": "13.4.0",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
+    "@vitejs/plugin-react": "4.0.4",
+    "canvas": "^2.11.0",
+    "eslint": "^8.0.0",
+    "eslint-config-custom": "*",
+    "jsdom": "22.1.0",
+    "react": "^18.2.0",
+    "tsconfig": "*",
+    "tsup": "7.2.0",
+    "typescript": "5.1.6",
+    "vitest": "0.34.3"
+  },
+  "peerDependencies": {
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
+  }
+}
