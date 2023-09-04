@@ -9,33 +9,32 @@ interface UseClickOutside {
 }
 
 export const useClickOutside: UseClickOutside = ({ onClickOutside }) => {
-  // prevent useCallback recreation
   const callbackRef = React.useRef(onClickOutside);
+  const clickHandlerRef = React.useRef<((e: MouseEvent) => void) | null>(null);
   const ref = React.useRef<HTMLElement | null>(null);
 
-  const handleClick = React.useCallback((e: MouseEvent) => {
-    if (!(e.target instanceof Node)) return;
-    const isInside = ref.current && ref.current.contains(e.target);
+  const setRef = React.useCallback((node: HTMLElement) => {
+    if (ref.current && clickHandlerRef.current) {
+      document.removeEventListener('click', clickHandlerRef.current);
+    }
 
-    if (!isInside) callbackRef.current(e);
+    if (node) {
+      // Can't safely use useCallback() to define event handler
+      // because we must make sure to pass the same value to addEventListener and removeEventListener.
+      const handleClick = (e: MouseEvent): void => {
+        if (!(e.target instanceof Node)) return;
+        const isInside = ref.current && ref.current.contains(e.target);
+
+        if (!isInside) callbackRef.current(e);
+      };
+      clickHandlerRef.current = handleClick;
+
+      document.addEventListener('click', clickHandlerRef.current);
+    }
+
+    // save node reference
+    ref.current = node;
   }, []);
-
-  const setRef = React.useCallback(
-    (node: HTMLElement) => {
-      if (ref.current) {
-        // Make sure to cleanup any events/references added to the last instance
-        document.removeEventListener('click', handleClick);
-      }
-
-      if (node) {
-        document.addEventListener('click', handleClick);
-      }
-
-      // save node reference
-      ref.current = node;
-    },
-    [handleClick]
-  );
 
   return [setRef];
 };
