@@ -16,9 +16,11 @@
       "cache": false
     },
     "test": {
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "test:ci": {
+      "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
     },
     "test:watch": {

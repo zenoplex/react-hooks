@@ -1,0 +1,21 @@
+name: Test
+
+on: push
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          check-latest: true
+      - name: Install dependencies
+        run: npm ci
+      - name: Create Release Pull Request or Publish to npm
+        run: npm run test-publish-packages
