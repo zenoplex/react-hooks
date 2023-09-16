@@ -29,8 +29,8 @@ export const Error: Story = {
     const canvas = within(canvasElement);
     await userEvent.clear(canvas.getByLabelText('url'));
     await userEvent.click(canvas.getByText('load'));
-    await waitFor(() => {
-      expect(canvas.getByTestId('result').textContent).toBe('error');
+    await waitFor(async () => {
+      await expect(canvas.getByTestId('result').textContent).toBe('error');
     });
   },
 };

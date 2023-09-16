@@ -19,9 +19,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    expect(canvas.getAllByText(/\d/)).toHaveLength(5);
+    await expect(canvas.getAllByText(/\d/)).toHaveLength(5);
   },
 };
 

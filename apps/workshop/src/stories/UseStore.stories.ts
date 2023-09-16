@@ -16,33 +16,33 @@ export const Default: Story = {
     await sleep();
     const canvas = within(canvasElement);
 
-    expect(canvas.getByTestId('global-count').textContent).toBe(
+    await expect(canvas.getByTestId('global-count').textContent).toBe(
       'Global count: 0'
     );
-    expect(canvas.getByTestId('other-count').textContent).toBe(
+    await expect(canvas.getByTestId('other-count').textContent).toBe(
       'Other count: 0'
     );
 
     await step('increment other', async () => {
       await userEvent.click(canvas.getByText('load other 2'));
-      expect(canvas.getByTestId('other-count').textContent).toBe(
+      await expect(canvas.getByTestId('other-count').textContent).toBe(
         'Other count: 1'
       );
 
       await userEvent.click(canvas.getByText('load other 2'));
-      expect(canvas.getByTestId('other-count').textContent).toBe(
+      await expect(canvas.getByTestId('other-count').textContent).toBe(
         'Other count: 2'
       );
     });
 
     await step('increment global', async () => {
       await userEvent.click(canvas.getByText('load global 2'));
-      expect(canvas.getByTestId('global-count').textContent).toBe(
+      await expect(canvas.getByTestId('global-count').textContent).toBe(
         'Global count: 1'
       );
 
       await userEvent.click(canvas.getByText('load global 2'));
-      expect(canvas.getByTestId('global-count').textContent).toBe(
+      await expect(canvas.getByTestId('global-count').textContent).toBe(
         'Global count: 2'
       );
     });

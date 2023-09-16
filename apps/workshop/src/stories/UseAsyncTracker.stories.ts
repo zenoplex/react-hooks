@@ -17,23 +17,23 @@ export const Default: Story = {
     await sleep();
     const canvas = within(canvasElement);
 
-    expect(canvas.getByTestId('global-count').textContent).toBe(
+    await expect(canvas.getByTestId('global-count').textContent).toBe(
       'Global count: 0'
     );
-    expect(canvas.getByTestId('other-count').textContent).toBe(
+    await expect(canvas.getByTestId('other-count').textContent).toBe(
       'Other count: 0'
     );
 
     await userEvent.click(canvas.getByText('load other 2'));
-    await waitFor(() => {
-      expect(canvas.getByTestId('other-count').textContent).toBe(
+    await waitFor(async () => {
+      await expect(canvas.getByTestId('other-count').textContent).toBe(
         'Other count: 1'
       );
-      expect(canvas.getByText('loading...')).toBeDisabled();
+      await expect(canvas.getByText('loading...')).toBeDisabled();
     });
     await waitFor(
-      () => {
-        expect(canvas.getByTestId('other-count').textContent).toBe(
+      async () => {
+        await expect(canvas.getByTestId('other-count').textContent).toBe(
           'Other count: 0'
         );
       },
@@ -41,15 +41,15 @@ export const Default: Story = {
     );
 
     await userEvent.click(canvas.getByText('load global'));
-    await waitFor(() => {
-      expect(canvas.getByTestId('global-count').textContent).toBe(
+    await waitFor(async () => {
+      await expect(canvas.getByTestId('global-count').textContent).toBe(
         'Global count: 1'
       );
-      expect(canvas.getByText('loading...')).toBeDisabled();
+      await expect(canvas.getByText('loading...')).toBeDisabled();
     });
     await waitFor(
-      () => {
-        expect(canvas.getByTestId('global-count').textContent).toBe(
+      async () => {
+        await expect(canvas.getByTestId('global-count').textContent).toBe(
           'Global count: 0'
         );
       },
