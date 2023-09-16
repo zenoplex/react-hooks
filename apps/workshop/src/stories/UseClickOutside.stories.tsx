@@ -20,15 +20,15 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     await userEvent.click(canvas.getByRole('button', { name: 'parent' }));
-    expect(alertFn).toHaveBeenCalledWith('clicked outside');
+    await expect(alertFn).toHaveBeenCalledWith('clicked outside');
     alertFn.mockClear();
 
     await userEvent.click(canvas.getByRole('button', { name: 'outside' }));
-    expect(alertFn).toHaveBeenCalledWith('clicked outside');
+    await expect(alertFn).toHaveBeenCalledWith('clicked outside');
     alertFn.mockClear();
 
     await userEvent.click(canvas.getByRole('button', { name: 'inside' }));
-    expect(alertFn).not.toHaveBeenCalled();
+    await expect(alertFn).not.toHaveBeenCalled();
 
     alertFn.mockRestore();
   },
