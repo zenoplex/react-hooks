@@ -6,7 +6,7 @@ orbs:
 parameters:
   node_version:
     type: string
-    default: 18.17.0
+    default: 20.9.0
     description: Node version to use
   playwright_version:
     type: string
