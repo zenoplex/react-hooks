@@ -1,6 +1,6 @@
 {
   "name": "@gen/use-async-tracker",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
@@ -40,6 +40,6 @@
     "react-dom": ">=16.9.0"
   },
   "dependencies": {
-    "@gen/use-store": "0.0.1"
+    "@gen/use-store": "0.1.0"
   }
 }
