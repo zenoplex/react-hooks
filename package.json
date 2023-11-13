@@ -19,7 +19,7 @@
     "version-packages": "changeset version",
     "release": "npm run build && changeset publish",
     "publish-packages": "turbo run build lint test && changeset version && changeset publish",
-    "test-publish-packages": "turbo run build lint test"
+    "test-publish-packages": "turbo run build && turbo run lint test"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.4.8",
