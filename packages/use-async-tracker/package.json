@@ -40,6 +40,6 @@
     "react-dom": ">=16.9.0"
   },
   "dependencies": {
-    "@gen/use-store": "0.0.1"
+    "@gen/use-store": "*"
   }
 }
