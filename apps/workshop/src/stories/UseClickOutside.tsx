@@ -2,9 +2,7 @@ import React from 'react';
 import useClickOutside from '@gen/use-click-outside';
 
 export const UseClickOutside: React.FC = () => {
-  const [setRef] = useClickOutside(
-    () => window.alert('clicked outside'),
-  );
+  const [setRef] = useClickOutside(() => window.alert('clicked outside'));
 
   return (
     <div className="bg-slate-300 p-3 flex flex-col gap-3">

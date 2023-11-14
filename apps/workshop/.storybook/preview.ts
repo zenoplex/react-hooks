@@ -19,8 +19,8 @@ const preview: Preview = {
     msw: {
       handlers: {
         test: handlers,
-      }
-    }
+      },
+    },
   },
   decorators: [
     // @ts-expect-error storycap types are not up to date
