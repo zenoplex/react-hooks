@@ -6,10 +6,12 @@ import { useClickOutside } from './useClickOutside';
 // Required for pdfjs
 import 'pdfjs-dist/legacy/build/pdf.worker.entry';
 
-type Props = Parameters<typeof useClickOutside>[0];
+type Props = {
+  callback: Parameters<typeof useClickOutside>[0];
+};
 
-const Component = (props: Props): JSX.Element => {
-  const [setRef] = useClickOutside(props);
+const Component = ({ callback }: Props): JSX.Element => {
+  const [setRef] = useClickOutside(callback);
   return (
     <div data-testid="root">
       <div ref={setRef}>
@@ -22,13 +24,13 @@ const Component = (props: Props): JSX.Element => {
   );
 };
 
-const LazyComponent = (props: Props): JSX.Element => {
+const LazyComponent = ({ callback }: Props): JSX.Element => {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     setIsLoading(false);
   }, []);
-  const [setRef] = useClickOutside(props);
+  const [setRef] = useClickOutside(callback);
   if (isLoading) return <div>Loading</div>;
   return (
     <div data-testid="root">
@@ -48,7 +50,7 @@ describe('use-click-outside', () => {
   test('Should call onClickOutside if clicked outside', async () => {
     const onClickOutside = vi.fn();
 
-    render(<Component onClickOutside={onClickOutside} />);
+    render(<Component callback={onClickOutside} />);
 
     await userEvent.click(screen.getByRole('button', { name: 'outside' }));
 
@@ -58,7 +60,7 @@ describe('use-click-outside', () => {
   test('Should call onClickOutside if clicked outside(lazy)', async () => {
     const onClickOutside = vi.fn();
 
-    render(<LazyComponent onClickOutside={onClickOutside} />);
+    render(<LazyComponent callback={onClickOutside} />);
 
     await userEvent.click(screen.getByRole('button', { name: 'outside' }));
 
@@ -68,7 +70,7 @@ describe('use-click-outside', () => {
   test('Should not call onClickOutside if clicked inside', async () => {
     const onClickOutside = vi.fn();
 
-    render(<Component onClickOutside={onClickOutside} />);
+    render(<Component callback={onClickOutside} />);
 
     await userEvent.click(screen.getByRole('button', { name: 'inside' }));
 
@@ -78,7 +80,7 @@ describe('use-click-outside', () => {
   test('Should not call onClickOutside if clicked inside(lazy)', async () => {
     const onClickOutside = vi.fn();
 
-    render(<LazyComponent onClickOutside={onClickOutside} />);
+    render(<LazyComponent callback={onClickOutside} />);
 
     await userEvent.click(screen.getByRole('button', { name: 'inside' }));
 

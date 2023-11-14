@@ -1,39 +1,46 @@
 import React, { RefCallback } from 'react';
 
-interface UseClickOutsideOptions {
-  onClickOutside: (e: MouseEvent) => void;
-}
-
 interface UseClickOutside {
-  (options: UseClickOutsideOptions): [RefCallback<HTMLElement>];
+  (callback: (e: MouseEvent) => void): [RefCallback<HTMLElement>];
 }
 
-export const useClickOutside: UseClickOutside = ({ onClickOutside }) => {
-  const callbackRef = React.useRef(onClickOutside);
-  const clickHandlerRef = React.useRef<((e: MouseEvent) => void) | null>(null);
-  const ref = React.useRef<HTMLElement | null>(null);
+export const useClickOutside: UseClickOutside = (callback) => {
+  /** Callback reference */
+  const callbackRef = React.useRef(callback);
+  callbackRef.current = callback;
+  /** EventHandler reference */
+  const handleMousedownRef = React.useRef<((e: MouseEvent) => void) | null>(
+    null
+  );
+  /** Element reference */
+  const elementRef = React.useRef<HTMLElement | null>(null);
 
-  const setRef = React.useCallback((node: HTMLElement) => {
-    if (ref.current && clickHandlerRef.current) {
-      document.removeEventListener('click', clickHandlerRef.current);
+  const setRef: RefCallback<HTMLElement> = React.useCallback((node) => {
+    if (handleMousedownRef.current) {
+      document.removeEventListener('mousedown', handleMousedownRef.current);
+      elementRef.current = null;
     }
 
     if (node) {
       // Can't safely use useCallback() to define event handler
-      // because we must make sure to pass the same value to addEventListener and removeEventListener.
-      const handleClick = (e: MouseEvent): void => {
-        if (!(e.target instanceof Node)) return;
-        const isInside = ref.current && ref.current.contains(e.target);
+      // because we must make sure to pass the same reference to addEventListener and removeEventListener.
+      const handleMousedown = (e: MouseEvent): void => {
+        if (!(e.target instanceof Node)) {
+          return;
+        }
+        const isInside =
+          elementRef.current && elementRef.current.contains(e.target);
 
-        if (!isInside) callbackRef.current(e);
+        if (!isInside) {
+          callbackRef.current(e);
+        }
       };
-      clickHandlerRef.current = handleClick;
 
-      document.addEventListener('click', clickHandlerRef.current);
+      handleMousedownRef.current = handleMousedown;
+      document.addEventListener('mousedown', handleMousedownRef.current);
     }
 
-    // save node reference
-    ref.current = node;
+    elementRef.current = node;
   }, []);
 
   return [setRef];
