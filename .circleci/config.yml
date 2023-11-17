@@ -96,7 +96,7 @@ jobs:
           path: coverages
   typecheck:
     executor: default
-    resource_class: small
+    resource_class: medium
     steps:
       - checkout
       - attach_my_workspace
