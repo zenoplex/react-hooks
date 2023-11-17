@@ -5,6 +5,10 @@ export const handlers = [
     return HttpResponse.error();
   }),
 
+  http.all('http://200.com', () => {
+    return HttpResponse.json({ data: 'success' });
+  }),
+
   http.all('http://500-error.com', () => {
     return HttpResponse.json(null, { status: 500 });
   }),
