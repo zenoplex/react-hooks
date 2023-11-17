@@ -61,6 +61,8 @@ export const useAsync: UseAsync = (fn, options) => {
         setStatus('success');
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         callbackRefs.current?.onSuccess?.(response);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return response;
       } catch (err) {
         setError(err);
         setData(null);
