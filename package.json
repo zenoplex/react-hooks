@@ -13,7 +13,7 @@
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run test",
-    "test:ci": "turbo run test:ci --concurrency=2",
+    "test:ci": "VITEST_MAX_THREADS=2 turbo run test:ci --concurrency=2",
     "test:watch": "turbo run test:watch",
     "changeset": "changeset",
     "version-packages": "changeset version",
