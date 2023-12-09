@@ -37,7 +37,7 @@
     "@vitejs/plugin-react-swc": "3.5.0",
     "autoprefixer": "10.4.16",
     "msw-storybook-addon": "1.10.0",
-    "postcss": "8.4.31",
+    "postcss": "8.4.32",
     "prop-types": "^15.8.1",
     "reg-keygen-git-hash-plugin": "0.12.2",
     "reg-publish-s3-plugin": "0.12.2",
