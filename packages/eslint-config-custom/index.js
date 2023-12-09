@@ -20,6 +20,8 @@ module.exports = {
     '@typescript-eslint/prefer-readonly': 'off',
     '@typescript-eslint/prefer-readonly-parameter-types': 'off',
     'functional/prefer-readonly-type': 'off',
+    // Disable to allow unknown | null union type
+    '@typescript-eslint/no-redundant-type-constituents': 'off',
     // Error unused vars
     '@typescript-eslint/no-unused-vars': 'error',
     // No any
