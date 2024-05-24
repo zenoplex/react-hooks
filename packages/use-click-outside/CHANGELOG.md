@@ -1,5 +1,11 @@
 # @gen/use-click-outside
 
+## 0.3.0
+
+### Minor Changes
+
+- [#285](https://github.com/zenoplex/react-hooks/pull/285) [`3789736`](https://github.com/zenoplex/react-hooks/commit/3789736db502f6ce175fd67243e33d909e920de5) Thanks [@zenoplex](https://github.com/zenoplex)! - fix: Update ref with useEffect
+
 ## 0.2.0
 
 ### Minor Changes
