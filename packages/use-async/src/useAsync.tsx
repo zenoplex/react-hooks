@@ -38,8 +38,11 @@ type UseAsync = <T extends AsyncFn>(
 export const useAsync: UseAsync = (fn, options) => {
   /** ref to save options */
   const callbackRefs = React.useRef(options);
-  // eslint-disable-next-line functional/immutable-data
-  callbackRefs.current = options;
+
+  React.useEffect(() => {
+    // eslint-disable-next-line functional/immutable-data
+    callbackRefs.current = options;
+  }, [options]);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [data, setData] = React.useState<ReturnType<UseAsync>['data']>(null);
