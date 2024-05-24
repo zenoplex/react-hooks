@@ -7,7 +7,11 @@ interface UseClickOutside {
 export const useClickOutside: UseClickOutside = (callback) => {
   /** Callback reference */
   const callbackRef = React.useRef(callback);
-  callbackRef.current = callback;
+
+  React.useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
   /** EventHandler reference */
   const handleMousedownRef = React.useRef<((e: MouseEvent) => void) | null>(
     null
